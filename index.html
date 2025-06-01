@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Anniversary</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Playfair Display", serif;
+        overflow: hidden;
+        background: #000;
+        height: 100vh;
+        position: relative;
+      }
+
+      /* Neon text effect */
+      .neon-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "Dancing Script", cursive;
+        font-size: clamp(2.5rem, 10vw, 5rem);
+        color: #fff;
+        text-align: center;
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff1177,
+          0 0 40px #ff1177, 0 0 80px #ff1177;
+        animation: neon-pulse 1.5s ease-in-out infinite alternate;
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      .neon-text.visible {
+        opacity: 1;
+      }
+
+      @keyframes neon-pulse {
+        from {
+          text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff1177,
+            0 0 40px #ff1177, 0 0 80px #ff1177;
+        }
+        to {
+          text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff1177,
+            0 0 40px #ff1177, 0 0 80px #ff1177, 0 0 120px #ff1177;
+        }
+      }
+
+      /* Countdown text */
+      .countdown {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(3rem, 15vw, 8rem);
+        color: #fff;
+        text-align: center;
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .countdown.visible {
+        opacity: 1;
+      }
+
+      /* Floating hearts animation */
+      .floating-hearts {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .heart-bg {
+        position: absolute;
+        color: rgba(255, 105, 180, 0.7);
+        font-size: clamp(20px, 5vw, 40px);
+        animation: floatUp 8s infinite linear;
+      }
+
+      @keyframes floatUp {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Game Section */
+      .game-section {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        opacity: 0;
+        transition: opacity 1s ease;
+        background: linear-gradient(
+          135deg,
+          #ff9a9e 0%,
+          #fecfef 50%,
+          #fecfef 100%
+        );
+      }
+
+      .game-section.active {
+        opacity: 1;
+      }
+
+      .score {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 1.5rem;
+        color: #8b0000;
+        font-weight: 600;
+        z-index: 100;
+      }
+
+      .timer {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 1.2rem;
+        color: #8b0000;
+        font-weight: 600;
+        z-index: 100;
+      }
+
+      .bow-container {
+        position: absolute;
+        bottom: 150px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 80px;
+        z-index: 50;
+      }
+
+      .bow {
+        width: 60px;
+        height: 60px;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20 20 Q50 10 80 20 Q50 50 80 80 Q50 90 20 80 Q50 50 20 20" fill="%23D2691E" stroke="%23A0522D" stroke-width="2"/></svg>');
+        background-size: contain;
+        background-repeat: no-repeat;
+        cursor: pointer;
+      }
+
+      .arrow {
+        position: absolute;
+        width: 4px;
+        height: 40px;
+        background: linear-gradient(
+          to top,
+          #8b4513 0%,
+          #d2691e 50%,
+          #c0c0c0 100%
+        );
+        border-radius: 2px;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: all 0.1s ease;
+        z-index: 51;
+      }
+
+      .arrow::before {
+        content: "";
+        position: absolute;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 12px solid #c0c0c0;
+      }
+
+      .flying-arrow {
+        position: absolute;
+        width: 4px;
+        height: 40px;
+        background: linear-gradient(
+          to top,
+          #8b4513 0%,
+          #d2691e 50%,
+          #c0c0c0 100%
+        );
+        border-radius: 2px;
+        z-index: 30;
+        pointer-events: none;
+      }
+
+      .flying-arrow::before {
+        content: "";
+        position: absolute;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 12px solid #c0c0c0;
+      }
+
+      .heart {
+        position: absolute;
+        font-size: 30px;
+        cursor: pointer;
+        z-index: 20;
+        transition: all 0.3s ease;
+      }
+
+      .heart.pink {
+        color: #ff69b4;
+        text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+      }
+
+      .heart.black {
+        color: #333;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+
+      .heart.hit {
+        animation: heartPop 0.5s ease-out forwards;
+      }
+
+      @keyframes heartPop {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.8);
+          opacity: 0.7;
+        }
+        75% {
+          transform: scale(0.5);
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(0);
+          opacity: 0;
+        }
+      }
+
+      .game-over {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        z-index: 200;
+        display: none;
+      }
+
+      .game-over h2 {
+        color: #8b0000;
+        font-size: 2rem;
+        margin-bottom: 15px;
+      }
+
+      .game-over p {
+        color: #666;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+      }
+
+      .restart-btn {
+        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        font-family: "Dancing Script", cursive;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        position: relative;
+        z-index: 30;
+      }
+
+      /* Mobile optimizations */
+      @media (max-width: 768px) {
+        .bow-container {
+          bottom: 120px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Floating hearts background -->
+    <div class="floating-hearts" id="floatingHearts"></div>
+
+    <!-- Anniversary Message -->
+    <div class="neon-text" id="anniversaryMessage">
+      Happy Anniversary<br />Dad and Mom
+    </div>
+
+    <!-- Countdown -->
+    <div class="countdown" id="countdown"></div>
+
+    <!-- Game Section -->
+    <div class="game-section" id="gameSection">
+      <div class="score" id="score">❤ Score: 0</div>
+      <div class="timer" id="timer">⏰ Time: 60s</div>
+
+      <div class="bow-container" id="bowContainer">
+        <div class="bow"></div>
+        <div class="arrow" id="arrow"></div>
+      </div>
+
+      <div class="game-over" id="gameOver">
+        <h2>Game Complete!</h2>
+        <p id="finalScore">
+          Thanks for playing and making this day extra special!
+        </p>
+        <button class="restart-btn" id="restartBtn">Play Again</button>
+      </div>
+    </div>
+
+    <script>
+      // Wait for DOM to be fully loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        // Start the sequence
+        startSequence();
+
+        // Create background hearts
+        createBackgroundHearts();
+
+        // Set up restart button
+        document
+          .getElementById("restartBtn")
+          .addEventListener("click", restartGame);
+      });
+
+      function startSequence() {
+        // Show anniversary message with neon effect
+        const message = document.getElementById("anniversaryMessage");
+        message.classList.add("visible");
+
+        // Create more hearts during the message display
+        createIntenseHearts();
+
+        // After 5 seconds, hide message and show countdown
+        setTimeout(() => {
+          message.classList.remove("visible");
+          startCountdown();
+        }, 5000);
+      }
+
+      function createIntenseHearts() {
+        // Create more hearts for the intro
+        for (let i = 0; i < 30; i++) {
+          setTimeout(() => {
+            createHeart();
+          }, i * 200);
+        }
+      }
+
+      function createHeart() {
+        const container = document.getElementById("floatingHearts");
+        const heart = document.createElement("div");
+        heart.className = "heart-bg";
+        heart.innerHTML = "❤";
+        heart.style.left = Math.random() * 100 + "%";
+        heart.style.animationDuration = Math.random() * 3 + 5 + "s";
+        container.appendChild(heart);
+
+        setTimeout(() => {
+          if (heart.parentNode) {
+            heart.parentNode.removeChild(heart);
+          }
+        }, 8000);
+      }
+
+      function startCountdown() {
+        const countdown = document.getElementById("countdown");
+        countdown.classList.add("visible");
+
+        // Show 3
+        countdown.textContent = "3";
+
+        // Show 2 after 1 second
+        setTimeout(() => {
+          countdown.textContent = "2";
+        }, 1000);
+
+        // Show 1 after 2 seconds
+        setTimeout(() => {
+          countdown.textContent = "1";
+        }, 2000);
+
+        // Show GO after 3 seconds
+        setTimeout(() => {
+          countdown.textContent = "GO!";
+        }, 3000);
+
+        // Start game after 3.5 seconds
+        setTimeout(() => {
+          countdown.classList.remove("visible");
+          startGame();
+        }, 3500);
+      }
+
+      // Background floating hearts
+      function createBackgroundHearts() {
+        const container = document.getElementById("floatingHearts");
+        setInterval(() => {
+          const heart = document.createElement("div");
+          heart.className = "heart-bg";
+          heart.innerHTML = "💕";
+          heart.style.left = Math.random() * 100 + "%";
+          heart.style.animationDuration = Math.random() * 3 + 5 + "s";
+          container.appendChild(heart);
+
+          setTimeout(() => {
+            if (heart.parentNode) {
+              heart.parentNode.removeChild(heart);
+            }
+          }, 8000);
+        }, 1000);
+      }
+
+      // Game functionality
+      let score = 0;
+      let gameTime = 60;
+      let gameActive = false;
+      let hearts = [];
+      let arrows = [];
+      let gameTimer;
+      let heartSpawnTimer;
+
+      function startGame() {
+        document.getElementById("gameSection").classList.add("active");
+        score = 0;
+        gameTime = 60;
+        gameActive = true;
+        hearts = [];
+        arrows = [];
+
+        updateScore();
+        updateTimer();
+
+        gameTimer = setInterval(() => {
+          gameTime--;
+          updateTimer();
+          if (gameTime <= 0) {
+            endGame();
+          }
+        }, 1000);
+
+        heartSpawnTimer = setInterval(spawnHeart, 1500);
+        setupBowControls();
+      }
+
+      function updateScore() {
+        document.getElementById("score").textContent = `❤ Score: ${score}`;
+      }
+
+      function updateTimer() {
+        document.getElementById("timer").textContent = `⏰ Time: ${gameTime}s`;
+      }
+
+      function spawnHeart() {
+        if (!gameActive) return;
+
+        const heart = document.createElement("div");
+        heart.className = "heart " + (Math.random() < 0.8 ? "pink" : "black");
+        heart.innerHTML = "💖";
+        if (heart.classList.contains("black")) {
+          heart.innerHTML = "🖤";
+        }
+
+        const side = Math.random() < 0.5 ? "left" : "right";
+        heart.style.top = Math.random() * 70 + 5 + "%"; // Increased range to 70% of screen
+        heart.style[side] = "-50px";
+
+        document.getElementById("gameSection").appendChild(heart);
+        hearts.push({
+          element: heart,
+          x: side === "left" ? -50 : window.innerWidth + 50,
+          y: (parseFloat(heart.style.top) * window.innerHeight) / 100,
+          direction: side === "left" ? 1 : -1,
+          speed: Math.random() * 2 + 1,
+        });
+
+        animateHeart(heart, side === "left" ? 1 : -1);
+      }
+
+      function animateHeart(heartElement, direction) {
+        let position = direction === 1 ? -50 : window.innerWidth + 50;
+        const speed = Math.random() * 2 + 1;
+
+        const animate = () => {
+          if (!gameActive || !heartElement.parentNode) return;
+
+          position += direction * speed;
+          heartElement.style[direction === 1 ? "left" : "right"] =
+            direction === 1
+              ? position + "px"
+              : window.innerWidth - position + "px";
+
+          // Add wavy motion
+          const wave = Math.sin(position * 0.01) * 20;
+          heartElement.style.transform = `translateY(${wave}px)`;
+
+          if (
+            (direction === 1 && position < window.innerWidth + 100) ||
+            (direction === -1 && position > -100)
+          ) {
+            requestAnimationFrame(animate);
+          } else {
+            if (heartElement.parentNode) {
+              heartElement.parentNode.removeChild(heartElement);
+            }
+          }
+        };
+
+        requestAnimationFrame(animate);
+      }
+
+      // Bow and arrow controls - improved mechanics with angle control
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+      let pullDistance = 0;
+      let aimAngle = 0;
+
+      function setupBowControls() {
+        const bowContainer = document.getElementById("bowContainer");
+        const arrow = document.getElementById("arrow");
+
+        // Mouse events
+        bowContainer.addEventListener("mousedown", startPull);
+        document.addEventListener("mousemove", updatePull);
+        document.addEventListener("mouseup", releasePull);
+
+        // Touch events for mobile
+        bowContainer.addEventListener("touchstart", (e) => {
+          e.preventDefault();
+          startPull(e.touches[0]);
+        });
+        document.addEventListener("touchmove", (e) => {
+          e.preventDefault();
+          updatePull(e.touches[0]);
+        });
+        document.addEventListener("touchend", (e) => {
+          e.preventDefault();
+          releasePull();
+        });
+      }
+
+      function startPull(e) {
+        if (!gameActive) return;
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+
+        // Reset arrow position
+        const arrow = document.getElementById("arrow");
+        arrow.style.transform = "translateX(-50%)";
+      }
+
+      function updatePull(e) {
+        if (!isDragging || !gameActive) return;
+
+        const currentX = e.clientX;
+        const currentY = e.clientY;
+
+        // Calculate pull distance and angle
+        const deltaX = currentX - startX;
+        const deltaY = currentY - startY;
+        pullDistance = Math.max(
+          0,
+          Math.min(150, Math.sqrt(deltaX * deltaX + deltaY * deltaY))
+        );
+
+        // Calculate aim angle (in degrees)
+        aimAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+        const arrow = document.getElementById("arrow");
+        const bowContainer = document.getElementById("bowContainer");
+
+        // Move arrow based on pull distance and angle
+        const pullX = Math.cos((aimAngle * Math.PI) / 180) * pullDistance * 0.3;
+        const pullY = Math.sin((aimAngle * Math.PI) / 180) * pullDistance * 0.3;
+
+        arrow.style.transform = `translateX(-50%) translateX(${pullX}px) translateY(${pullY}px) rotate(${
+          aimAngle + 90
+        }deg)`;
+
+        // Visual feedback - arrow gets "stretched" based on pull distance
+        arrow.style.height = 40 + pullDistance * 0.2 + "px";
+      }
+
+      function releasePull() {
+        if (!isDragging || !gameActive) return;
+
+        isDragging = false;
+
+        if (pullDistance > 15) {
+          fireArrow(pullDistance, aimAngle);
+        }
+
+        // Reset arrow
+        const arrow = document.getElementById("arrow");
+        arrow.style.transform = "translateX(-50%)";
+        arrow.style.height = "40px";
+        pullDistance = 0;
+        aimAngle = 0;
+      }
+
+      function fireArrow(power, angle) {
+        const bowContainer = document.getElementById("bowContainer");
+        const bowRect = bowContainer.getBoundingClientRect();
+
+        const flyingArrow = document.createElement("div");
+        flyingArrow.className = "flying-arrow";
+        flyingArrow.style.left = bowRect.left + bowRect.width / 2 + "px";
+        flyingArrow.style.top = bowRect.top + "px";
+        flyingArrow.style.transform = `rotate(${angle + 90}deg)`;
+
+        document.body.appendChild(flyingArrow);
+
+        // Calculate velocity based on pull power and angle
+        const velocity = power * 0.25; // Increased velocity multiplier
+        let arrowY = bowRect.top;
+        let arrowX = bowRect.left + bowRect.width / 2;
+
+        // Convert angle to radians and calculate velocity components
+        const angleRad = (angle * Math.PI) / 180;
+        let velocityX = Math.cos(angleRad) * velocity;
+        let velocityY = Math.sin(angleRad) * velocity;
+
+        const gravity = 0.3; // Reduced gravity for longer flight
+        const airResistance = 0.99; // Air resistance factor
+
+        const animateArrow = () => {
+          // Apply physics
+          velocityY += gravity; // Apply gravity
+          velocityX *= airResistance; // Apply air resistance
+          velocityY *= airResistance;
+
+          // Update position
+          arrowX += velocityX;
+          arrowY += velocityY;
+
+          // Update arrow position
+          flyingArrow.style.top = arrowY + "px";
+          flyingArrow.style.left = arrowX + "px";
+
+          // Update arrow rotation to match trajectory
+          const currentAngle =
+            Math.atan2(velocityY, velocityX) * (180 / Math.PI);
+          flyingArrow.style.transform = `rotate(${currentAngle + 90}deg)`;
+
+          // Check collision with hearts
+          checkArrowCollision(arrowX, arrowY, flyingArrow);
+
+          // Continue animation if arrow is still on screen and moving
+          if (
+            arrowY < window.innerHeight + 200 &&
+            arrowY > -200 &&
+            arrowX > -200 &&
+            arrowX < window.innerWidth + 200 &&
+            (Math.abs(velocityX) > 0.5 || Math.abs(velocityY) > 0.5)
+          ) {
+            requestAnimationFrame(animateArrow);
+          } else {
+            if (flyingArrow.parentNode) {
+              flyingArrow.parentNode.removeChild(flyingArrow);
+            }
+          }
+        };
+
+        requestAnimationFrame(animateArrow);
+      }
+
+      function checkArrowCollision(arrowX, arrowY, arrowElement) {
+        hearts.forEach((heart, index) => {
+          const heartRect = heart.element.getBoundingClientRect();
+
+          // Increased collision detection area
+          if (
+            arrowX >= heartRect.left - 15 &&
+            arrowX <= heartRect.right + 15 &&
+            arrowY >= heartRect.top - 15 &&
+            arrowY <= heartRect.bottom + 15
+          ) {
+            // Hit!
+            heart.element.classList.add("hit");
+
+            // Create explosion effect
+            createExplosion(
+              heartRect.left + heartRect.width / 2,
+              heartRect.top + heartRect.height / 2
+            );
+
+            if (heart.element.classList.contains("pink")) {
+              score += 1;
+            } else {
+              score -= 3;
+            }
+
+            updateScore();
+
+            setTimeout(() => {
+              if (heart.element.parentNode) {
+                heart.element.parentNode.removeChild(heart.element);
+              }
+            }, 500);
+
+            hearts.splice(index, 1);
+
+            // Remove arrow
+            if (arrowElement.parentNode) {
+              arrowElement.parentNode.removeChild(arrowElement);
+            }
+          }
+        });
+      }
+
+      function createExplosion(x, y) {
+        for (let i = 0; i < 8; i++) {
+          const particle = document.createElement("div");
+          particle.style.position = "absolute";
+          particle.style.left = x + "px";
+          particle.style.top = y + "px";
+          particle.style.width = "6px";
+          particle.style.height = "6px";
+          particle.style.background = "#ff69b4";
+          particle.style.borderRadius = "50%";
+          particle.style.pointerEvents = "none";
+          particle.style.zIndex = "100";
+
+          const angle = (i / 8) * 2 * Math.PI;
+          const speed = 50 + Math.random() * 30;
+
+          document.body.appendChild(particle);
+
+          let particleX = x;
+          let particleY = y;
+          let velocityX = Math.cos(angle) * speed;
+          let velocityY = Math.sin(angle) * speed;
+
+          const animateParticle = () => {
+            velocityX *= 0.95;
+            velocityY *= 0.95;
+            velocityY += 2; // gravity
+
+            particleX += velocityX * 0.1;
+            particleY += velocityY * 0.1;
+
+            particle.style.left = particleX + "px";
+            particle.style.top = particleY + "px";
+            particle.style.opacity =
+              parseFloat(particle.style.opacity || 1) - 0.02;
+
+            if (parseFloat(particle.style.opacity || 1) > 0) {
+              requestAnimationFrame(animateParticle);
+            } else {
+              if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+              }
+            }
+          };
+
+          requestAnimationFrame(animateParticle);
+        }
+      }
+
+      function endGame() {
+        gameActive = false;
+        clearInterval(gameTimer);
+        clearInterval(heartSpawnTimer);
+
+        document.getElementById(
+          "finalScore"
+        ).textContent = `Final Score: ${score} points! Thanks for playing and making this day extra special!`;
+        document.getElementById("gameOver").style.display = "block";
+      }
+
+      function restartGame() {
+        document.getElementById("gameOver").style.display = "none";
+
+        // Clear existing hearts
+        hearts.forEach((heart) => {
+          if (heart.element.parentNode) {
+            heart.element.parentNode.removeChild(heart.element);
+          }
+        });
+
+        startGame();
+      }
+    </script>
+  </body>
+</html>
